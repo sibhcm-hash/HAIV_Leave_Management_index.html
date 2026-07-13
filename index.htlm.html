@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ thống Xin Nghỉ Phép – Công ty HAIV</title>
+<style>
+:root{
+  --blue-900:#0b3d91;
+  --blue-700:#123f7c;
+  --blue-600:#1857b5;
+  --blue-50:#eef3fb;
+  --gray-100:#f4f5f7;
+  --gray-200:#e5e7eb;
+  --gray-400:#9aa1ac;
+  --gray-600:#5b6472;
+  --gray-800:#28303c;
+  --white:#ffffff;
+  --green:#1f9d55;
+  --green-bg:#e6f6ec;
+  --orange:#e08e0b;
+  --orange-bg:#fdf1dc;
+  --red:#d64545;
+  --red-bg:#fbe8e8;
+  --gray-bg:#eceef1;
+  --radius:10px;
+  --shadow:0 2px 10px rgba(20,30,60,.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--gray-100);color:var(--gray-800);}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:#c7ccd4;border-radius:4px;}
+
+/* ---------- LOGIN ---------- */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--blue-900),var(--blue-600));
+  padding:20px;
+}
+.login-card{
+  background:var(--white);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.25);
+  width:100%;max-width:400px;padding:36px 32px;
+}
+.login-logo{
+  width:64px;height:64px;border-radius:14px;background:var(--blue-900);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;
+  margin:0 auto 14px;letter-spacing:1px;
+}
+.login-title{text-align:center;font-size:19px;font-weight:700;color:var(--blue-900);margin-bottom:4px;}
+.login-sub{text-align:center;color:var(--gray-600);font-size:13px;margin-bottom:24px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray-800);margin-bottom:6px;}
+.form-group input, .form-group select, .form-group textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;
+  outline:none;transition:.15s;background:#fff;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus{border-color:var(--blue-600);box-shadow:0 0 0 3px var(--blue-50);}
+.role-select{display:flex;gap:8px;}
+.role-opt{flex:1;text-align:center;padding:8px 4px;border:1px solid var(--gray-200);border-radius:8px;font-size:12.5px;font-weight:600;color:var(--gray-600);}
+.role-opt.active{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-700);}
+.chk-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);margin-bottom:18px;}
+.btn{border:none;border-radius:8px;padding:11px 18px;font-size:14px;font-weight:600;transition:.15s;}
+.btn-primary{background:var(--blue-900);color:#fff;width:100%;}
+.btn-primary:hover{background:var(--blue-700);}
+.demo-box{margin-top:18px;background:var(--gray-100);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--gray-600);line-height:1.7;}
+.demo-box b{color:var(--gray-800);}
+
+/* ---------- APP LAYOUT ---------- */
+#appScreen{display:none;min-height:100vh;}
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:60px;background:var(--white);
+  border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;z-index:50;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.hamburger{display:none;background:none;border:none;font-size:20px;padding:6px;color:var(--blue-900);}
+.brand-mark{width:34px;height:34px;border-radius:8px;background:var(--blue-900);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
+.brand-text{font-weight:700;color:var(--blue-900);font-size:15px;}
+.brand-sub{font-size:11px;color:var(--gray-600);}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.user-chip{display:flex;align-items:center;gap:8px;font-size:13px;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;}
+.logout-btn{background:var(--gray-100);border:1px solid var(--gray-200);border-radius:7px;padding:7px 12px;font-size:12.5px;font-weight:600;color:var(--gray-800);}
+.logout-btn:hover{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+
+.sidebar{
+  position:fixed;top:60px;left:0;bottom:0;width:230px;background:var(--white);
+  border-right:1px solid var(--gray-200);padding:14px 10px;overflow-y:auto;z-index:40;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13.5px;
+  font-weight:600;color:var(--gray-600);margin-bottom:3px;
+}
+.nav-item .ic{width:18px;text-align:center;}
+.nav-item:hover{background:var(--gray-100);color:var(--gray-800);}
+.nav-item.active{background:var(--blue-50);color:var(--blue-900);}
+
+.main-content{margin-left:230px;margin-top:60px;padding:24px;min-height:calc(100vh - 60px);}
+.page{display:none;}
+.page.active{display:block;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.page-title{font-size:20px;font-weight:700;color:var(--blue-900);}
+.page-sub{font-size:12.5px;color:var(--gray-600);margin-top:2px;}
+
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+.grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px;}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;border-left:4px solid var(--blue-600);}
+.stat-card .num{font-size:24px;font-weight:800;color:var(--blue-900);}
+.stat-card .lbl{font-size:12px;color:var(--gray-600);margin-top:2px;}
+.stat-card.green{border-color:var(--green);} .stat-card.green .num{color:var(--green);}
+.stat-card.orange{border-color:var(--orange);} .stat-card.orange .num{color:var(--orange);}
+.stat-card.red{border-color:var(--red);} .stat-card.red .num{color:var(--red);}
+
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:10px 8px;background:var(--gray-100);color:var(--gray-600);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;}
+td{padding:10px 8px;border-bottom:1px solid var(--gray-100);vertical-align:middle;}
+tr:hover td{background:#fafbfd;}
+.table-wrap{overflow-x:auto;}
+
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+.badge.approved{background:var(--green-bg);color:var(--green);}
+.badge.pending{background:var(--orange-bg);color:var(--orange);}
+.badge.rejected{background:var(--red-bg);color:var(--red);}
+.badge.draft{background:var(--gray-bg);color:var(--gray-600);}
+.badge.cancelled{background:var(--gray-bg);color:var(--gray-600);}
+
+.btn-sm{padding:6px 10px;font-size:12px;border-radius:6px;border:1px solid var(--gray-200);background:#fff;font-weight:600;margin-right:4px;}
+.btn-sm:hover{background:var(--gray-100);}
+.btn-sm.blue{color:var(--blue-700);border-color:var(--blue-600);}
+.btn-sm.red{color:var(--red);border-color:var(--red);}
+.btn-sm.green{color:var(--green);border-color:var(--green);}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.toolbar input, .toolbar select{padding:8px 10px;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;}
+.btn-main{background:var(--blue-900);color:#fff;padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;border:none;}
+.btn-main:hover{background:var(--blue-700);}
+.btn-outline{background:#fff;color:var(--blue-900);border:1px solid var(--blue-600);padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;}
+.btn-outline:hover{background:var(--blue-50);}
+.btn-ghost{background:transparent;border:1px solid var(--gray-200);padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;color:var(--gray-600);}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
+.form-grid .full{grid-column:1/-1;}
+.hint{font-size:11.5px;color:var(--gray-600);margin-top:4px;}
+.warn-box{background:var(--orange-bg);color:#8a5d05;border:1px solid #f3cf8f;border-radius:8px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;}
+.err-box{background:var(--red-bg);color:#8a2626;border:1px solid #f3b3b3;border-radius:8px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;}
+.calc-box{background:var(--blue-50);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--blue-900);font-weight:700;}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,25,45,.5);display:none;align-items:center;justify-content:center;
+  z-index:100;padding:16px;
+}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;}
+.modal-head h3{margin:0;font-size:16px;color:var(--blue-900);}
+.modal-close{background:none;border:none;font-size:20px;color:var(--gray-600);}
+.modal-body{padding:20px 22px;}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:10px;}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;font-size:13px;margin-bottom:16px;}
+.detail-grid .dl{color:var(--gray-600);font-size:11.5px;text-transform:uppercase;font-weight:700;}
+.detail-grid .dv{font-weight:600;color:var(--gray-800);margin-top:2px;}
+
+.toast-wrap{position:fixed;top:70px;right:20px;z-index:200;display:flex;flex-direction:column;gap:10px;}
+.toast{background:#fff;border-left:4px solid var(--blue-600);border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.15);padding:12px 16px;font-size:13px;min-width:250px;animation:slideIn .25s ease;}
+.toast.success{border-color:var(--green);} .toast.error{border-color:var(--red);} .toast.warn{border-color:var(--orange);}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:150px;margin-top:10px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.bar{width:100%;background:var(--blue-600);border-radius:4px 4px 0 0;min-height:2px;}
+.bar-lbl{font-size:10px;color:var(--gray-600);margin-top:4px;}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-600);}
+.dept-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.dept-tag{background:var(--gray-100);border-radius:6px;padding:6px 10px;font-size:12px;}
+
+.overlay-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:39;display:none;}
+@media(max-width:860px){
+  .hamburger{display:block;}
+  .sidebar{transform:translateX(-100%);transition:.2s;box-shadow:0 0 30px rgba(0,0,0,.2);}
+  .sidebar.open{transform:translateX(0);}
+  .main-content{margin-left:0;padding:16px;}
+  .overlay-bg.show{display:block;}
+  .form-grid{grid-template-columns:1fr;}
+  .grid-stats{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">HAIV</div>
+    <div class="login-title">HỆ THỐNG XIN NGHỈ PHÉP</div>
+    <div class="login-sub">Quản lý đơn nghỉ phép, phê duyệt và theo dõi ngày phép của nhân viên.</div>
+
+    <div class="form-group">
+      <label>Tên đăng nhập hoặc email</label>
+      <input type="text" id="loginEmail" placeholder="vd: nhanvien@haiv.com">
+    </div>
+    <div class="form-group">
+      <label>Mật khẩu</label>
+      <input type="password" id="loginPassword" placeholder="••••••">
+    </div>
+    <div class="form-group">
+      <label>Vai trò</label>
+      <div class="role-select" id="roleSelect">
+        <div class="role-opt active" data-role="employee">Nhân viên</div>
+        <div class="role-opt" data-role="manager">Trưởng bộ phận</div>
+        <div class="role-opt" data-role="admin">Quản trị viên</div>
+      </div>
+    </div>
+    <div class="chk-row">
+      <input type="checkbox" id="rememberMe"> <label for="rememberMe">Ghi nhớ đăng nhập</label>
+    </div>
+    <button class="btn btn-primary" id="loginBtn">Đăng nhập</button>
+
+    <div class="demo-box">
+      <b>Tài khoản dùng thử:</b><br>
+      Nhân viên: nhanvien@haiv.com / 123456<br>
+      Trưởng bộ phận: truongphong@haiv.com / 123456<br>
+      Quản trị viên: admin@haiv.com / 123456
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP SCREEN ================= -->
+<div id="appScreen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburgerBtn">☰</button>
+      <div class="brand-mark">H</div>
+      <div>
+        <div class="brand-text">HAIV Leave System</div>
+        <div class="brand-sub">Hệ thống xin nghỉ phép</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div>
+          <div style="font-weight:700;" id="userName">-</div>
+          <div style="font-size:11px;color:var(--gray-600);" id="userRoleLabel">-</div>
+        </div>
+      </div>
+      <button class="logout-btn" id="logoutBtn">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="overlay-bg" id="overlayBg"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="nav-item active" data-page="dashboard"><span class="ic">📊</span> Tổng quan</div>
+    <div class="nav-item" data-page="createRequest"><span class="ic">📝</span> Tạo đơn nghỉ phép</div>
+    <div class="nav-item" data-page="myRequests"><span class="ic">📄</span> Đơn của tôi</div>
+    <div class="nav-item nav-manager" data-page="approvals"><span class="ic">✅</span> Phê duyệt đơn</div>
+    <div class="nav-item nav-admin" data-page="employees"><span class="ic">👥</span> Danh sách nhân viên</div>
+    <div class="nav-item nav-admin" data-page="reports"><span class="ic">📈</span> Báo cáo nghỉ phép</div>
+    <div class="nav-item nav-admin" data-page="settings"><span class="ic">⚙️</span> Cài đặt</div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Tổng quan</div>
+          <div class="page-sub">Thống kê nghỉ phép của bạn</div>
+        </div>
+      </div>
+      <div class="grid-stats" id="dashStats"></div>
+      <div class="two-col">
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Đơn xin nghỉ gần nhất</h3>
+          <div class="table-wrap"><table id="dashRecentTable"><thead><tr><th>Mã đơn</th><th>Loại nghỉ</th><th>Thời gian</th><th>Trạng thái</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Số ngày nghỉ theo tháng</h3>
+          <div class="bar-chart" id="monthChart"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Nhân viên nghỉ trong tháng này</h3>
+        <div id="calendarList" class="dept-legend"></div>
+      </div>
+    </div>
+
+    <!-- ===== CREATE REQUEST ===== -->
+    <div class="page" id="page-createRequest">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Tạo đơn xin nghỉ phép</div>
+          <div class="page-sub">Điền đầy đủ thông tin bên dưới</div>
+        </div>
+      </div>
+      <div class="card">
+        <div id="createFormMsg"></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Mã đơn</label><input type="text" id="f_code" disabled></div>
+          <div class="form-group"><label>Họ và tên nhân viên</label><input type="text" id="f_name" disabled></div>
+          <div class="form-group"><label>Mã nhân viên</label><input type="text" id="f_empid" disabled></div>
+          <div class="form-group"><label>Phòng ban</label><input type="text" id="f_dept" disabled></div>
+          <div class="form-group"><label>Chức vụ</label><input type="text" id="f_position" disabled></div>
+          <div class="form-group"><label>Loại nghỉ phép *</label>
+            <select id="f_type">
+              <option value="Nghỉ phép năm">Nghỉ phép năm</option>
+              <option value="Nghỉ ốm">Nghỉ ốm</option>
+              <option value="Nghỉ việc riêng">Nghỉ việc riêng</option>
+              <option value="Nghỉ không hưởng lương">Nghỉ không hưởng lương</option>
+              <option value="Nghỉ thai sản">Nghỉ thai sản</option>
+              <option value="Nghỉ bù">Nghỉ bù</option>
+              <option value="Đi công tác">Đi công tác</option>
+              <option value="Nghỉ khác">Nghỉ khác</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Ngày bắt đầu *</label><input type="date" id="f_start"></div>
+          <div class="form-group"><label>Ngày kết thúc *</label><input type="date" id="f_end"></div>
+          <div class="form-group"><label>Buổi bắt đầu</label>
+            <select id="f_startSession"><option>Cả ngày</option><option>Buổi sáng</option><option>Buổi chiều</option></select>
+          </div>
+          <div class="form-group"><label>Buổi kết thúc</label>
+            <select id="f_endSession"><option>Cả ngày</option><option>Buổi sáng</option><option>Buổi chiều</option></select>
+          </div>
+          <div class="form-group"><label><input type="checkbox" id="f_noSat"> Không tính ngày thứ Bảy</label></div>
+          <div class="form-group"><div class="calc-box">Tổng số ngày nghỉ: <span id="f_totalDays">0</span> ngày</div></div>
+          <div class="form-group full"><label>Lý do xin nghỉ *</label><textarea id="f_reason" rows="2"></textarea></div>
+          <div class="form-group"><label>Địa chỉ / nơi ở trong thời gian nghỉ</label><input type="text" id="f_address"></div>
+          <div class="form-group"><label>Số điện thoại liên hệ</label><input type="text" id="f_phone"></div>
+          <div class="form-group"><label>Người bàn giao công việc</label><input type="text" id="f_handoverPerson"></div>
+          <div class="form-group"><label>Người phê duyệt</label>
+            <select id="f_approver"></select>
+          </div>
+          <div class="form-group full"><label>Nội dung công việc bàn giao</label><textarea id="f_handoverContent" rows="2"></textarea></div>
+          <div class="form-group full"><label>Tệp đính kèm (vd: giấy khám bệnh)</label><input type="file" id="f_attachment"></div>
+          <div class="form-group full"><label><input type="checkbox" id="f_confirmHandover"> Tôi xác nhận đã bàn giao công việc đầy đủ</label></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+          <button class="btn-main" id="submitRequestBtn">Gửi đơn</button>
+          <button class="btn-outline" id="draftRequestBtn">Lưu nháp</button>
+          <button class="btn-ghost" id="cancelRequestBtn">Hủy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MY REQUESTS ===== -->
+    <div class="page" id="page-myRequests">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Đơn của tôi</div>
+          <div class="page-sub">Danh sách các đơn xin nghỉ đã tạo</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <input type="text" id="myFilterCode" placeholder="Tìm theo mã đơn...">
+          <select id="myFilterType"><option value="">Tất cả loại nghỉ</option></select>
+          <select id="myFilterStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="Bản nháp">Bản nháp</option>
+            <option value="Chờ trưởng bộ phận duyệt">Chờ duyệt</option>
+            <option value="Đã duyệt">Đã duyệt</option>
+            <option value="Từ chối">Từ chối</option>
+            <option value="Đã hủy">Đã hủy</option>
+          </select>
+          <input type="month" id="myFilterMonth">
+        </div>
+        <div class="table-wrap"><table id="myRequestsTable">
+          <thead><tr><th>Mã đơn</th><th>Ngày gửi</th><th>Loại nghỉ</th><th>Thời gian</th><th>Số ngày</th><th>Lý do</th><th>Người duyệt</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== APPROVALS ===== -->
+    <div class="page" id="page-approvals">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Phê duyệt đơn</div>
+          <div class="page-sub">Danh sách đơn đang chờ duyệt</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap"><table id="approvalsTable">
+          <thead><tr><th>Mã đơn</th><th>Nhân viên</th><th>Phòng ban</th><th>Loại nghỉ</th><th>Thời gian</th><th>Số ngày</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== EMPLOYEES ===== -->
+    <div class="page" id="page-employees">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Danh sách nhân viên</div>
+          <div class="page-sub">Quản lý thông tin và ngày phép nhân viên</div>
+        </div>
+        <button class="btn-main" id="addEmployeeBtn">+ Thêm nhân viên</button>
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <input type="text" id="empSearch" placeholder="Tìm theo tên hoặc mã NV...">
+          <select id="empDeptFilter"><option value="">Tất cả phòng ban</option></select>
+        </div>
+        <div class="table-wrap"><table id="employeesTable">
+          <thead><tr><th>Mã NV</th><th>Họ tên</th><th>Phòng ban</th><th>Chức vụ</th><th>Email</th><th>Ngày vào làm</th><th>Tổng phép</th><th>Đã dùng</th><th>Còn lại</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ===== REPORTS ===== -->
+    <div class="page" id="page-reports">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Báo cáo nghỉ phép</div>
+          <div class="page-sub">Thống kê tổng hợp toàn công ty</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline" id="exportCsvBtn">Xuất CSV</button>
+          <button class="btn-ghost" id="printReportBtn">In báo cáo</button>
+        </div>
+      </div>
+      <div class="grid-stats" id="reportStats"></div>
+      <div class="two-col">
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Thống kê theo phòng ban</h3>
+          <div class="table-wrap"><table id="deptReportTable"><thead><tr><th>Phòng ban</th><th>Số đơn</th><th>Tổng ngày nghỉ</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Thống kê theo loại nghỉ</h3>
+          <div class="table-wrap"><table id="typeReportTable"><thead><tr><th>Loại nghỉ</th><th>Số đơn</th><th>Tổng ngày</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Nhân viên nghỉ nhiều nhất</h3>
+        <div class="table-wrap"><table id="topEmpTable"><thead><tr><th>Nhân viên</th><th>Phòng ban</th><th>Tổng ngày nghỉ</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Cài đặt</div>
+          <div class="page-sub">Sao lưu, khôi phục và quản lý dữ liệu</div>
+        </div>
+      </div>
+      <div class="card" style="max-width:560px;">
+        <h3 style="margin-top:0;color:var(--blue-900);font-size:15px;">Số ngày phép mặc định / năm</h3>
+        <div class="form-group"><input type="number" id="defaultAnnualDays" value="12"></div>
+        <button class="btn-outline" id="saveDefaultDaysBtn">Lưu thiết lập</button>
+
+        <h3 style="color:var(--blue-900);font-size:15px;margin-top:26px;">Dữ liệu</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-outline" id="backupBtn">Sao lưu ra file JSON</button>
+          <label class="btn-outline" style="display:inline-block;">Nhập lại từ file JSON<input type="file" id="restoreFileInput" accept=".json" style="display:none;"></label>
+          <button class="btn-outline" id="resetSampleBtn">Khôi phục dữ liệu mẫu</button>
+          <button class="btn-ghost" id="clearAllBtn" style="color:var(--red);border-color:var(--red);">Xóa toàn bộ dữ liệu</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ===== APPROVAL DETAIL MODAL ===== -->
+<div class="modal-overlay" id="approvalModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Chi tiết đơn nghỉ phép</h3><button class="modal-close" data-close="approvalModal">✕</button></div>
+    <div class="modal-body" id="approvalModalBody"></div>
+    <div class="modal-foot" id="approvalModalFoot"></div>
+  </div>
+</div>
+
+<!-- ===== EMPLOYEE MODAL ===== -->
+<div class="modal-overlay" id="employeeModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="employeeModalTitle">Thêm nhân viên</h3><button class="modal-close" data-close="employeeModal">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Mã nhân viên</label><input type="text" id="em_id"></div>
+        <div class="form-group"><label>Họ và tên</label><input type="text" id="em_name"></div>
+        <div class="form-group"><label>Phòng ban</label><select id="em_dept"></select></div>
+        <div class="form-group"><label>Chức vụ</label><input type="text" id="em_position"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="em_email"></div>
+        <div class="form-group"><label>Số điện thoại</label><input type="text" id="em_phone"></div>
+        <div class="form-group"><label>Ngày vào làm</label><input type="date" id="em_joinDate"></div>
+        <div class="form-group"><label>Tổng ngày phép</label><input type="number" id="em_totalDays" value="12"></div>
+        <div class="form-group"><label>Ngày phép đã dùng</label><input type="number" id="em_usedDays" value="0"></div>
+        <div class="form-group"><label>Vai trò</label>
+          <select id="em_role"><option value="employee">Nhân viên</option><option value="manager">Trưởng bộ phận</option><option value="admin">Quản trị viên</option></select>
+        </div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="em_status"><option value="Đang làm việc">Đang làm việc</option><option value="Đã khóa">Đã khóa</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" data-close="employeeModal">Hủy</button>
+      <button class="btn-main" id="saveEmployeeBtn">Lưu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ======================= DATA LAYER ======================= */
+const DEPARTMENTS = ["Ban Giám đốc","Phòng Kỹ thuật","Phòng Thí nghiệm","Phòng Kế toán","Phòng Hành chính – Nhân sự","Phòng Kinh doanh","Bộ phận Công trình"];
+const LEAVE_TYPES = ["Nghỉ phép năm","Nghỉ ốm","Nghỉ việc riêng","Nghỉ không hưởng lương","Nghỉ thai sản","Nghỉ bù","Đi công tác","Nghỉ khác"];
+const STATUSES = ["Bản nháp","Chờ trưởng bộ phận duyệt","Đã duyệt","Từ chối","Đã hủy"];
+
+function seedEmployees(){
+  return [
+    {id:"NV001",name:"Nguyễn Văn An",dept:"Ban Giám đốc",position:"Giám đốc",email:"admin@haiv.com",phone:"0901000001",joinDate:"2015-01-10",totalDays:15,usedDays:2,status:"Đang làm việc",role:"admin",password:"123456"},
+    {id:"NV002",name:"Trần Thị Bình",dept:"Phòng Kỹ thuật",position:"Trưởng phòng Kỹ thuật",email:"truongphong@haiv.com",phone:"0901000002",joinDate:"2017-03-15",totalDays:14,usedDays:5,status:"Đang làm việc",role:"manager",password:"123456"},
+    {id:"NV003",name:"Lê Văn Cường",dept:"Phòng Kỹ thuật",position:"Kỹ sư",email:"nhanvien@haiv.com",phone:"0901000003",joinDate:"2020-06-01",totalDays:12,usedDays:3,status:"Đang làm việc",role:"employee",password:"123456"},
+    {id:"NV004",name:"Phạm Thị Dung",dept:"Phòng Thí nghiệm",position:"Trưởng phòng Thí nghiệm",email:"dung.pham@haiv.com",phone:"0901000004",joinDate:"2018-02-20",totalDays:14,usedDays:4,status:"Đang làm việc",role:"manager",password:"123456"},
+    {id:"NV005",name:"Hoàng Văn Em",dept:"Phòng Thí nghiệm",position:"Nhân viên thí nghiệm",email:"em.hoang@haiv.com",phone:"0901000005",joinDate:"2021-09-01",totalDays:12,usedDays:1,status:"Đang làm việc",role:"employee",password:"123456"},
+    {id:"NV006",name:"Vũ Thị Phương",dept:"Phòng Kế toán",position:"Kế toán trưởng",email:"phuong.vu@haiv.com",phone:"0901000006",joinDate:"2016-04-11",totalDays:14,usedDays:6,status:"Đang làm việc",role:"manager",password:"123456"},
+    {id:"NV007",name:"Đặng Văn Giang",dept:"Phòng Kế toán",position:"Kế toán viên",email:"giang.dang@haiv.com",phone:"0901000007",joinDate:"2019-07-23",totalDays:12,usedDays:2,status:"Đang làm việc",role:"employee",password:"123456"},
+    {id:"NV008",name:"Bùi Thị Hạnh",dept:"Phòng Hành chính – Nhân sự",position:"Trưởng phòng HCNS",email:"hanh.bui@haiv.com",phone:"0901000008",joinDate:"2015-11-05",totalDays:14,usedDays:3,status:"Đang làm việc",role:"manager",password:"123456"},
+    {id:"NV009",name:"Ngô Văn Inh",dept:"Phòng Kinh doanh",position:"Nhân viên kinh doanh",email:"inh.ngo@haiv.com",phone:"0901000009",joinDate:"2022-01-17",totalDays:12,usedDays:0,status:"Đang làm việc",role:"employee",password:"123456"},
+    {id:"NV010",name:"Đỗ Thị Kim",dept:"Bộ phận Công trình",position:"Giám sát công trình",email:"kim.do@haiv.com",phone:"0901000010",joinDate:"2019-05-30",totalDays:12,usedDays:4,status:"Đang làm việc",role:"employee",password:"123456"}
+  ];
+}
+
+function seedRequests(emps){
+  const findEmp = id => emps.find(e=>e.id===id);
+  const base = [
+    {id:"DP-0001",employeeId:"NV003",type:"Nghỉ phép năm",start:"2026-06-10",end:"2026-06-12",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:3,reason:"Về quê thăm gia đình",approver:"NV002",status:"Đã duyệt",createdAt:"2026-06-01",approvedBy:"Trần Thị Bình",approvedAt:"2026-06-02",approvalNote:"Đồng ý"},
+    {id:"DP-0002",employeeId:"NV003",type:"Nghỉ ốm",start:"2026-06-20",end:"2026-06-20",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:1,reason:"Cảm sốt",approver:"NV002",status:"Đã duyệt",createdAt:"2026-06-19",approvedBy:"Trần Thị Bình",approvedAt:"2026-06-19",approvalNote:"Mau khỏe"},
+    {id:"DP-0003",employeeId:"NV005",type:"Nghỉ việc riêng",start:"2026-07-14",end:"2026-07-14",startSession:"Buổi sáng",endSession:"Buổi sáng",totalDays:0.5,reason:"Việc gia đình",approver:"NV004",status:"Chờ trưởng bộ phận duyệt",createdAt:"2026-07-12",approvedBy:"",approvedAt:"",approvalNote:""},
+    {id:"DP-0004",employeeId:"NV007",type:"Nghỉ phép năm",start:"2026-07-20",end:"2026-07-24",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:5,reason:"Du lịch cùng gia đình",approver:"NV006",status:"Chờ trưởng bộ phận duyệt",createdAt:"2026-07-11",approvedBy:"",approvedAt:"",approvalNote:""},
+    {id:"DP-0005",employeeId:"NV009",type:"Đi công tác",start:"2026-07-16",end:"2026-07-18",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:3,reason:"Công tác chi nhánh Đà Nẵng",approver:"NV006",status:"Đã duyệt",createdAt:"2026-07-10",approvedBy:"Vũ Thị Phương",approvedAt:"2026-07-10",approvalNote:"Duyệt"},
+    {id:"DP-0006",employeeId:"NV010",type:"Nghỉ bù",start:"2026-06-05",end:"2026-06-05",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:1,reason:"Bù ngày làm cuối tuần trước",approver:"NV002",status:"Từ chối",createdAt:"2026-06-03",approvedBy:"Trần Thị Bình",approvedAt:"2026-06-04",approvalNote:"Chưa đủ điều kiện nghỉ bù, vui lòng bổ sung xác nhận"},
+    {id:"DP-0007",employeeId:"NV005",type:"Nghỉ ốm",start:"2026-05-15",end:"2026-05-16",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:2,reason:"Khám bệnh và nghỉ dưỡng",approver:"NV004",status:"Đã duyệt",createdAt:"2026-05-14",approvedBy:"Phạm Thị Dung",approvedAt:"2026-05-14",approvalNote:"Đồng ý, mau khỏe"},
+    {id:"DP-0008",employeeId:"NV003",type:"Nghỉ khác",start:"2026-07-25",end:"2026-07-25",startSession:"Cả ngày",endSession:"Cả ngày",totalDays:1,reason:"Việc cá nhân",approver:"NV002",status:"Bản nháp",createdAt:"2026-07-13",approvedBy:"",approvedAt:"",approvalNote:""}
+  ];
+  return base.map(r=>{
+    const e = findEmp(r.employeeId);
+    const ap = findEmp(r.approver);
+    return {...r,
+      employeeName:e.name, employeeCode:e.id, dept:e.dept, position:e.position,
+      approverName: ap?ap.name:"", address:"", phone:e.phone, handoverPerson:"", handoverContent:"", attachment:""
+    };
+  });
+}
+
+function loadData(){
+  let employees = JSON.parse(localStorage.getItem('haiv_employees')||'null');
+  let requests = JSON.parse(localStorage.getItem('haiv_requests')||'null');
+  let settings = JSON.parse(localStorage.getItem('haiv_settings')||'null');
+  if(!employees){ employees = seedEmployees(); }
+  if(!requests){ requests = seedRequests(employees); }
+  if(!settings){ settings = {defaultAnnualDays:12}; }
+  return {employees, requests, settings};
+}
+function saveData(){
+  localStorage.setItem('haiv_employees', JSON.stringify(DB.employees));
+  localStorage.setItem('haiv_requests', JSON.stringify(DB.requests));
+  localStorage.setItem('haiv_settings', JSON.stringify(DB.settings));
+}
+
+let DB = loadData();
+let currentUser = null; // {employee, role}
+let editingEmployeeId = null;
+let approvalModalRequestId = null;
+
+/* ======================= UTILITIES ======================= */
+function uid(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,7).toUpperCase(); }
+function nextRequestId(){
+  let max = 0;
+  DB.requests.forEach(r=>{ const n = parseInt(r.id.split('-')[1]||0); if(n>max) max=n; });
+  return 'DP-' + String(max+1).padStart(4,'0');
+}
+function toast(msg, type='success'){
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='.3s'; setTimeout(()=>el.remove(),300); }, 3200);
+}
+function fmtDate(d){ if(!d) return '-'; const p=d.split('-'); return p.length===3? `${p[2]}/${p[1]}/${p[0]}` : d; }
+function badgeClass(status){
+  return {"Đã duyệt":"approved","Chờ trưởng bộ phận duyệt":"pending","Từ chối":"rejected","Bản nháp":"draft","Đã hủy":"cancelled"}[status]||"draft";
+}
+function calcDays(start,end,ss,es,noSat){
+  if(!start||!end) return 0;
+  let s = new Date(start), e = new Date(end);
+  if(e < s) return -1; // invalid
+  let total = 0;
+  let cur = new Date(s);
+  while(cur <= e){
+    const day = cur.getDay(); // 0 = Sunday, 6 = Saturday
+    if(day !== 0 && !(noSat && day===6)){
+      total += 1;
+    }
+    cur.setDate(cur.getDate()+1);
+  }
+  // adjust half-day for start/end sessions if same day range end points and total includes them
+  if(s.getTime()===e.getTime()){
+    if(ss!=='Cả ngày' || es!=='Cả ngày'){ total = 0.5; }
+  } else {
+    if(total>0){
+      if(ss!=='Cả ngày' && s.getDay()!==0 && !(noSat && s.getDay()===6)) total -= 0.5;
+      if(es!=='Cả ngày' && e.getDay()!==0 && !(noSat && e.getDay()===6)) total -= 0.5;
+    }
+  }
+  return total;
+}
+
+/* ======================= LOGIN ======================= */
+let selectedRole = 'employee';
+document.getElementById('roleSelect').addEventListener('click', (e)=>{
+  const opt = e.target.closest('.role-opt');
+  if(!opt) return;
+  document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('active'));
+  opt.classList.add('active');
+  selectedRole = opt.dataset.role;
+});
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPassword').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPassword').value;
+  if(!email || !pass){ toast('Vui lòng nhập đầy đủ email và mật khẩu','error'); return; }
+  const emp = DB.employees.find(e=> e.email.toLowerCase()===email && e.password===pass);
+  if(!emp){ toast('Sai email hoặc mật khẩu','error'); return; }
+  if(emp.role !== selectedRole){ toast('Vai trò đã chọn không khớp với tài khoản này','error'); return; }
+  if(emp.status === 'Đã khóa'){ toast('Tài khoản của bạn đã bị khóa','error'); return; }
+  currentUser = { employee: emp, role: emp.role };
+  if(document.getElementById('rememberMe').checked){
+    localStorage.setItem('haiv_session', JSON.stringify({id:emp.id}));
+  }
+  enterApp();
+}
+
+function tryAutoLogin(){
+  const s = JSON.parse(localStorage.getItem('haiv_session')||'null');
+  if(s){
+    const emp = DB.employees.find(e=>e.id===s.id);
+    if(emp && emp.status!=='Đã khóa'){ currentUser = {employee:emp, role:emp.role}; enterApp(); return true; }
+  }
+  return false;
+}
+
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  currentUser = null;
+  localStorage.removeItem('haiv_session');
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+});
+
+function enterApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  document.getElementById('userName').textContent = currentUser.employee.name;
+  document.getElementById('userAvatar').textContent = currentUser.employee.name.split(' ').pop()[0];
+  const roleLabels = {employee:'Nhân viên', manager:'Trưởng bộ phận', admin:'Quản trị viên'};
+  document.getElementById('userRoleLabel').textContent = roleLabels[currentUser.role];
+  applyRoleVisibility();
+  populateDeptFilters();
+  navigateTo('dashboard');
+}
+
+function applyRoleVisibility(){
+  const isManager = currentUser.role==='manager' || currentUser.role==='admin';
+  const isAdmin = currentUser.role==='admin';
+  document.querySelectorAll('.nav-manager').forEach(el=> el.style.display = isManager? 'flex':'none');
+  document.querySelectorAll('.nav-admin').forEach(el=> el.style.display = isAdmin? 'flex':'none');
+}
+
+/* ======================= NAVIGATION ======================= */
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=>{ navigateTo(item.dataset.page); closeSidebarMobile(); });
+});
+function navigateTo(page){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.page===page));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const renderers = {
+    dashboard: renderDashboard, createRequest: renderCreateRequestForm, myRequests: renderMyRequests,
+    approvals: renderApprovals, employees: renderEmployees, reports: renderReports, settings: renderSettings
+  };
+  if(renderers[page]) renderers[page]();
+}
+document.getElementById('hamburgerBtn').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlayBg').classList.toggle('show');
+});
+document.getElementById('overlayBg').addEventListener('click', closeSidebarMobile);
+function closeSidebarMobile(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlayBg').classList.remove('show');
+}
+
+/* ======================= DASHBOARD ======================= */
+function getMyRequests(){
+  return DB.requests.filter(r=>r.employeeId===currentUser.employee.id);
+}
+function renderDashboard(){
+  const emp = currentUser.employee;
+  const mine = getMyRequests();
+  const used = emp.usedDays;
+  const remaining = emp.totalDays - emp.usedDays;
+  const pending = mine.filter(r=>r.status==='Chờ trưởng bộ phận duyệt').length;
+  const approved = mine.filter(r=>r.status==='Đã duyệt').length;
+  const rejected = mine.filter(r=>r.status==='Từ chối').length;
+
+  const stats = [
+    {num: emp.totalDays, lbl:'Tổng số ngày phép năm', cls:''},
+    {num: used, lbl:'Số ngày đã nghỉ', cls:''},
+    {num: remaining, lbl:'Số ngày phép còn lại', cls:'green'},
+    {num: pending, lbl:'Đơn đang chờ duyệt', cls:'orange'},
+    {num: approved, lbl:'Đơn đã được duyệt', cls:'green'},
+    {num: rejected, lbl:'Đơn bị từ chối', cls:'red'}
+  ];
+  document.getElementById('dashStats').innerHTML = stats.map(s=>`
+    <div class="stat-card ${s.cls}"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>
+  `).join('');
+
+  const recent = [...mine].sort((a,b)=> b.createdAt.localeCompare(a.createdAt)).slice(0,5);
+  document.querySelector('#dashRecentTable tbody').innerHTML = recent.length ? recent.map(r=>`
+    <tr><td>${r.id}</td><td>${r.type}</td><td>${fmtDate(r.start)} - ${fmtDate(r.end)}</td><td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td></tr>
+  `).join('') : `<tr><td colspan="4" class="empty-state">Chưa có đơn nào</td></tr>`;
+
+  // month chart (based on requests visible to user's scope: for employee -> own; manager/admin -> dept/all)
+  let scope = DB.requests;
+  if(currentUser.role==='manager') scope = DB.requests.filter(r=>r.dept===emp.dept);
+  if(currentUser.role==='employee') scope = mine;
+  const monthTotals = Array(12).fill(0);
+  scope.forEach(r=>{ if(r.status==='Đã duyệt'){ const m = new Date(r.start).getMonth(); monthTotals[m]+= r.totalDays; }});
+  const maxV = Math.max(...monthTotals, 1);
+  document.getElementById('monthChart').innerHTML = monthTotals.map((v,i)=>`
+    <div class="bar-col"><div class="bar" style="height:${(v/maxV*100)||2}%"></div><div class="bar-lbl">T${i+1}</div></div>
+  `).join('');
+
+  // calendar this month
+  const now = new Date();
+  const ym = now.toISOString().slice(0,7);
+  const onLeave = DB.requests.filter(r=> r.status==='Đã duyệt' && r.start.slice(0,7)===ym);
+  document.getElementById('calendarList').innerHTML = onLeave.length ? onLeave.map(r=>`
+    <div class="dept-tag"><b>${r.employeeName}</b> — ${fmtDate(r.start)} đến ${fmtDate(r.end)} (${r.type})</div>
+  `).join('') : `<div class="empty-state">Không có nhân viên nghỉ trong tháng này</div>`;
+}
+
+/* ======================= CREATE REQUEST ======================= */
+function renderCreateRequestForm(){
+  const emp = currentUser.employee;
+  document.getElementById('f_code').value = nextRequestId();
+  document.getElementById('f_name').value = emp.name;
+  document.getElementById('f_empid').value = emp.id;
+  document.getElementById('f_dept').value = emp.dept;
+  document.getElementById('f_position').value = emp.position;
+  document.getElementById('f_start').value = '';
+  document.getElementById('f_end').value = '';
+  document.getElementById('f_reason').value = '';
+  document.getElementById('f_address').value = '';
+  document.getElementById('f_phone').value = emp.phone;
+  document.getElementById('f_handoverPerson').value = '';
+  document.getElementById('f_handoverContent').value = '';
+  document.getElementById('f_confirmHandover').checked = false;
+  document.getElementById('f_noSat').checked = false;
+  document.getElementById('createFormMsg').innerHTML = '';
+
+  const approverSelect = document.getElementById('f_approver');
+  const managers = DB.employees.filter(e=> (e.role==='manager'||e.role==='admin') && e.id!==emp.id);
+  approverSelect.innerHTML = managers.map(m=>`<option value="${m.id}">${m.name} (${m.dept})</option>`).join('');
+
+  updateCalcDays();
+}
+['f_start','f_end','f_startSession','f_endSession','f_noSat'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', updateCalcDays);
+});
+function updateCalcDays(){
+  const start = document.getElementById('f_start').value;
+  const end = document.getElementById('f_end').value;
+  const ss = document.getElementById('f_startSession').value;
+  const es = document.getElementById('f_endSession').value;
+  const noSat = document.getElementById('f_noSat').checked;
+  const total = calcDays(start,end,ss,es,noSat);
+  document.getElementById('f_totalDays').textContent = total < 0 ? 'Ngày không hợp lệ' : total;
+}
+
+function validateRequestForm(isDraft){
+  const start = document.getElementById('f_start').value;
+  const end = document.getElementById('f_end').value;
+  const reason = document.getElementById('f_reason').value.trim();
+  const msg = document.getElementById('createFormMsg');
+  msg.innerHTML = '';
+  if(!isDraft){
+    if(!start || !end){ msg.innerHTML = `<div class="err-box">Vui lòng chọn ngày bắt đầu và ngày kết thúc.</div>`; return null; }
+    if(!reason){ msg.innerHTML = `<div class="err-box">Vui lòng nhập lý do xin nghỉ.</div>`; return null; }
+  }
+  if(start && end && new Date(end) < new Date(start)){
+    msg.innerHTML = `<div class="err-box">Ngày kết thúc không được trước ngày bắt đầu.</div>`; return null;
+  }
+  const ss = document.getElementById('f_startSession').value;
+  const es = document.getElementById('f_endSession').value;
+  const noSat = document.getElementById('f_noSat').checked;
+  const type = document.getElementById('f_type').value;
+  let totalDays = start && end ? calcDays(start,end,ss,es,noSat) : 0;
+  if(totalDays < 0){ msg.innerHTML = `<div class="err-box">Khoảng ngày không hợp lệ.</div>`; return null; }
+
+  const emp = currentUser.employee;
+  const remaining = emp.totalDays - emp.usedDays;
+  if(!isDraft && type !== 'Nghỉ không hưởng lương' && totalDays > remaining){
+    msg.innerHTML = `<div class="warn-box">Cảnh báo: số ngày xin nghỉ (${totalDays}) lớn hơn số ngày phép còn lại (${remaining}). Đơn vẫn có thể gửi để cấp trên xem xét.</div>`;
+  }
+  const overlap = DB.requests.some(r=> r.employeeId===emp.id && r.status!=='Từ chối' && r.status!=='Đã hủy' && r.status!=='Bản nháp' &&
+    start && end && !(new Date(end) < new Date(r.start) || new Date(start) > new Date(r.end)));
+  if(!isDraft && overlap){
+    msg.innerHTML += `<div class="warn-box">Cảnh báo: bạn đã có đơn nghỉ trùng thời gian này.</div>`;
+  }
+  return {start,end,ss,es,noSat,type,totalDays,reason};
+}
+
+function buildRequestObject(data, status){
+  const emp = currentUser.employee;
+  const approverId = document.getElementById('f_approver').value;
+  const approver = DB.employees.find(e=>e.id===approverId);
+  return {
+    id: nextRequestId(),
+    employeeId: emp.id, employeeName: emp.name, employeeCode: emp.id, dept: emp.dept, position: emp.position,
+    type: data.type, start: data.start, end: data.end, startSession: data.ss, endSession: data.es,
+    totalDays: data.totalDays, reason: data.reason,
+    address: document.getElementById('f_address').value.trim(),
+    phone: document.getElementById('f_phone').value.trim(),
+    handoverPerson: document.getElementById('f_handoverPerson').value.trim(),
+    handoverContent: document.getElementById('f_handoverContent').value.trim(),
+    approver: approverId, approverName: approver? approver.name:'',
+    attachment: document.getElementById('f_attachment').files[0]? document.getElementById('f_attachment').files[0].name : '',
+    status, createdAt: new Date().toISOString().slice(0,10),
+    approvedBy:'', approvedAt:'', approvalNote:''
+  };
+}
+
+document.getElementById('submitRequestBtn').addEventListener('click', ()=>{
+  const data = validateRequestForm(false);
+  if(!data) return;
+  if(!document.getElementById('f_confirmHandover').checked){
+    document.getElementById('createFormMsg').innerHTML += `<div class="err-box">Vui lòng xác nhận đã bàn giao công việc.</div>`;
+    return;
+  }
+  const req = buildRequestObject(data, 'Chờ trưởng bộ phận duyệt');
+  DB.requests.push(req);
+  saveData();
+  toast('Gửi đơn thành công','success');
+  navigateTo('myRequests');
+});
+document.getElementById('draftRequestBtn').addEventListener('click', ()=>{
+  const data = validateRequestForm(true);
+  if(!data) return;
+  const req = buildRequestObject(data, 'Bản nháp');
+  DB.requests.push(req);
+  saveData();
+  toast('Lưu nháp thành công','success');
+  navigateTo('myRequests');
+});
+document.getElementById('cancelRequestBtn').addEventListener('click', ()=> navigateTo('dashboard'));
+
+/* ======================= MY REQUESTS ======================= */
+function renderMyRequests(){
+  const typeFilter = document.getElementById('myFilterType');
+  if(typeFilter.options.length<=1){ typeFilter.innerHTML += LEAVE_TYPES.map(t=>`<option value="${t}">${t}</option>`).join(''); }
+  applyMyFilters();
+}
+['myFilterCode','myFilterType','myFilterStatus','myFilterMonth'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', applyMyFilters);
+});
+function applyMyFilters(){
+  const code = document.getElementById('myFilterCode').value.trim().toLowerCase();
+  const type = document.getElementById('myFilterType').value;
+  const status = document.getElementById('myFilterStatus').value;
+  const month = document.getElementById('myFilterMonth').value;
+  let list = getMyRequests();
+  if(code) list = list.filter(r=> r.id.toLowerCase().includes(code));
+  if(type) list = list.filter(r=> r.type===type);
+  if(status) list = list.filter(r=> r.status===status);
+  if(month) list = list.filter(r=> r.start.slice(0,7)===month);
+  list = [...list].sort((a,b)=> b.createdAt.localeCompare(a.createdAt));
+  const tbody = document.querySelector('#myRequestsTable tbody');
+  tbody.innerHTML = list.length ? list.map(r=>{
+    const canEdit = r.status==='Bản nháp' || r.status==='Chờ trưởng bộ phận duyệt';
+    return `<tr>
+      <td>${r.id}</td><td>${fmtDate(r.createdAt)}</td><td>${r.type}</td>
+      <td>${fmtDate(r.start)} - ${fmtDate(r.end)}</td><td>${r.totalDays}</td>
+      <td style="max-width:180px;">${r.reason||'-'}</td><td>${r.approverName||'-'}</td>
+      <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
+      <td>${canEdit? `<button class="btn-sm red" onclick="cancelMyRequest('${r.id}')">Hủy</button>`:''}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="9" class="empty-state">Không tìm thấy đơn nào</td></tr>`;
+}
+function cancelMyRequest(id){
+  if(!confirm('Bạn có chắc chắn muốn hủy đơn này không?')) return;
+  const r = DB.requests.find(x=>x.id===id);
+  if(r){ r.status='Đã hủy'; saveData(); toast('Đã hủy đơn','warn'); applyMyFilters(); renderDashboard(); }
+}
+
+/* ======================= APPROVALS ======================= */
+function getApprovalScope(){
+  if(currentUser.role==='admin') return DB.requests.filter(r=>r.status==='Chờ trưởng bộ phận duyệt');
+  if(currentUser.role==='manager') return DB.requests.filter(r=>r.status==='Chờ trưởng bộ phận duyệt' && r.dept===currentUser.employee.dept);
+  return [];
+}
+function renderApprovals(){
+  const list = getApprovalScope();
+  const tbody = document.querySelector('#approvalsTable tbody');
+  tbody.innerHTML = list.length ? list.map(r=>`
+    <tr><td>${r.id}</td><td>${r.employeeName}</td><td>${r.dept}</td><td>${r.type}</td>
+    <td>${fmtDate(r.start)} - ${fmtDate(r.end)}</td><td>${r.totalDays}</td>
+    <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
+    <td><button class="btn-sm blue" onclick="openApprovalModal('${r.id}')">Xem chi tiết</button></td></tr>
+  `).join('') : `<tr><td colspan="8" class="empty-state">Không có đơn nào cần duyệt</td></tr>`;
+}
+function openApprovalModal(id){
+  approvalModalRequestId = id;
+  const r = DB.requests.find(x=>x.id===id);
+  const emp = DB.employees.find(e=>e.id===r.employeeId);
+  const history = DB.requests.filter(x=>x.employeeId===r.employeeId && x.status==='Đã duyệt');
+  document.getElementById('approvalModalBody').innerHTML = `
+    <div class="detail-grid">
+      <div><div class="dl">Nhân viên</div><div class="dv">${r.employeeName} (${r.employeeCode})</div></div>
+      <div><div class="dl">Phòng ban / Chức vụ</div><div class="dv">${r.dept} - ${r.position}</div></div>
+      <div><div class="dl">Loại nghỉ</div><div class="dv">${r.type}</div></div>
+      <div><div class="dl">Thời gian nghỉ</div><div class="dv">${fmtDate(r.start)} - ${fmtDate(r.end)} (${r.startSession} → ${r.endSession})</div></div>
+      <div><div class="dl">Số ngày nghỉ</div><div class="dv">${r.totalDays}</div></div>
+      <div><div class="dl">Ngày phép còn lại</div><div class="dv">${emp.totalDays - emp.usedDays}</div></div>
+      <div class="full" style="grid-column:1/-1;"><div class="dl">Lý do nghỉ</div><div class="dv">${r.reason||'-'}</div></div>
+      <div><div class="dl">Người nhận bàn giao</div><div class="dv">${r.handoverPerson||'-'}</div></div>
+      <div><div class="dl">Tệp đính kèm</div><div class="dv">${r.attachment||'Không có'}</div></div>
+      <div class="full" style="grid-column:1/-1;"><div class="dl">Nội dung bàn giao</div><div class="dv">${r.handoverContent||'-'}</div></div>
+    </div>
+    <h4 style="color:var(--blue-900);font-size:13px;">Lịch sử nghỉ phép đã duyệt</h4>
+    <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Loại nghỉ</th><th>Thời gian</th><th>Số ngày</th></tr></thead>
+    <tbody>${history.length? history.map(h=>`<tr><td>${h.id}</td><td>${h.type}</td><td>${fmtDate(h.start)} - ${fmtDate(h.end)}</td><td>${h.totalDays}</td></tr>`).join('') : `<tr><td colspan="4" class="empty-state">Chưa có lịch sử</td></tr>`}</tbody></table></div>
+    <div class="form-group" style="margin-top:14px;"><label>Ý kiến phê duyệt</label><textarea id="approvalNoteInput" rows="2" placeholder="Nhập ý kiến (bắt buộc nếu từ chối hoặc yêu cầu bổ sung)"></textarea></div>
+  `;
+  document.getElementById('approvalModalFoot').innerHTML = `
+    <button class="btn-ghost" onclick="processApproval('bổ sung')">Yêu cầu bổ sung</button>
+    <button class="btn-sm red" style="padding:9px 16px;" onclick="processApproval('từ chối')">Từ chối</button>
+    <button class="btn-main" onclick="processApproval('duyệt')">Phê duyệt</button>
+  `;
+  document.getElementById('approvalModal').classList.add('show');
+}
+function processApproval(action){
+  const r = DB.requests.find(x=>x.id===approvalModalRequestId);
+  const note = document.getElementById('approvalNoteInput').value.trim();
+  if(action!=='duyệt' && !note){ toast('Vui lòng nhập lý do','error'); return; }
+  r.approvedBy = currentUser.employee.name;
+  r.approvedAt = new Date().toISOString().slice(0,10);
+  r.approvalNote = note;
+  if(action==='duyệt'){
+    r.status='Đã duyệt';
+    const emp = DB.employees.find(e=>e.id===r.employeeId);
+    if(emp && r.type!=='Nghỉ không hưởng lương'){ emp.usedDays += r.totalDays; }
+    toast('Duyệt đơn thành công','success');
+  } else if(action==='từ chối'){
+    r.status='Từ chối'; toast('Từ chối đơn thành công','warn');
+  } else {
+    r.status='Chờ trưởng bộ phận duyệt'; toast('Đã yêu cầu bổ sung thông tin','warn');
+  }
+  saveData();
+  closeModal('approvalModal');
+  renderApprovals(); renderDashboard();
+}
+
+/* ======================= EMPLOYEES ======================= */
+function populateDeptFilters(){
+  document.getElementById('empDeptFilter').innerHTML = '<option value="">Tất cả phòng ban</option>' + DEPARTMENTS.map(d=>`<option value="${d}">${d}</option>`).join('');
+  document.getElementById('em_dept').innerHTML = DEPARTMENTS.map(d=>`<option value="${d}">${d}</option>`).join('');
+}
+document.getElementById('empSearch').addEventListener('input', renderEmployees);
+document.getElementById('empDeptFilter').addEventListener('change', renderEmployees);
+function renderEmployees(){
+  const q = document.getElementById('empSearch').value.trim().toLowerCase();
+  const dept = document.getElementById('empDeptFilter').value;
+  let list = DB.employees.filter(e=> (!q || e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q)) && (!dept || e.dept===dept));
+  document.querySelector('#employeesTable tbody').innerHTML = list.length ? list.map(e=>`
+    <tr><td>${e.id}</td><td>${e.name}</td><td>${e.dept}</td><td>${e.position}</td><td>${e.email}</td>
+    <td>${fmtDate(e.joinDate)}</td><td>${e.totalDays}</td><td>${e.usedDays}</td><td>${(e.totalDays-e.usedDays).toFixed(1).replace('.0','')}</td>
+    <td><span class="badge ${e.status==='Đang làm việc'?'approved':'rejected'}">${e.status}</span></td>
+    <td>
+      <button class="btn-sm blue" onclick="openEmployeeModal('${e.id}')">Sửa</button>
+      <button class="btn-sm ${e.status==='Đang làm việc'?'red':'green'}" onclick="toggleLockEmployee('${e.id}')">${e.status==='Đang làm việc'?'Khóa':'Mở khóa'}</button>
+      <button class="btn-sm red" onclick="deleteEmployee('${e.id}')">Xóa</button>
+    </td></tr>
+  `).join('') : `<tr><td colspan="11" class="empty-state">Không tìm thấy nhân viên</td></tr>`;
+}
+document.getElementById('addEmployeeBtn').addEventListener('click', ()=> openEmployeeModal(null));
+function openEmployeeModal(id){
+  editingEmployeeId = id;
+  const modalTitle = document.getElementById('employeeModalTitle');
+  if(id){
+    const e = DB.employees.find(x=>x.id===id);
+    modalTitle.textContent = 'Sửa nhân viên';
+    document.getElementById('em_id').value = e.id; document.getElementById('em_id').disabled = true;
+    document.getElementById('em_name').value = e.name;
+    document.getElementById('em_dept').value = e.dept;
+    document.getElementById('em_position').value = e.position;
+    document.getElementById('em_email').value = e.email;
+    document.getElementById('em_phone').value = e.phone;
+    document.getElementById('em_joinDate').value = e.joinDate;
+    document.getElementById('em_totalDays').value = e.totalDays;
+    document.getElementById('em_usedDays').value = e.usedDays;
+    document.getElementById('em_role').value = e.role;
+    document.getElementById('em_status').value = e.status;
+  } else {
+    modalTitle.textContent = 'Thêm nhân viên';
+    document.getElementById('em_id').value = 'NV' + String(DB.employees.length+1).padStart(3,'0');
+    document.getElementById('em_id').disabled = false;
+    ['em_name','em_position','em_email','em_phone'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('em_joinDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('em_totalDays').value = DB.settings.defaultAnnualDays;
+    document.getElementById('em_usedDays').value = 0;
+    document.getElementById('em_role').value = 'employee';
+    document.getElementById('em_status').value = 'Đang làm việc';
+  }
+  document.getElementById('employeeModal').classList.add('show');
+}
+document.getElementById('saveEmployeeBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('em_name').value.trim();
+  const email = document.getElementById('em_email').value.trim();
+  if(!name || !email){ toast('Vui lòng nhập đầy đủ họ tên và email','error'); return; }
+  const data = {
+    id: document.getElementById('em_id').value.trim(),
+    name, dept: document.getElementById('em_dept').value,
+    position: document.getElementById('em_position').value.trim(),
+    email, phone: document.getElementById('em_phone').value.trim(),
+    joinDate: document.getElementById('em_joinDate').value,
+    totalDays: parseFloat(document.getElementById('em_totalDays').value)||0,
+    usedDays: parseFloat(document.getElementById('em_usedDays').value)||0,
+    role: document.getElementById('em_role').value,
+    status: document.getElementById('em_status').value,
+    password: '123456'
+  };
+  if(editingEmployeeId){
+    const idx = DB.employees.findIndex(e=>e.id===editingEmployeeId);
+    DB.employees[idx] = {...DB.employees[idx], ...data};
+    toast('Cập nhật nhân viên thành công','success');
+  } else {
+    if(DB.employees.some(e=>e.id===data.id)){ toast('Mã nhân viên đã tồn tại','error'); return; }
+    DB.employees.push(data);
+    toast('Thêm nhân viên thành công','success');
+  }
+  saveData();
+  closeModal('employeeModal');
+  renderEmployees();
+});
+function toggleLockEmployee(id){
+  const e = DB.employees.find(x=>x.id===id);
+  e.status = e.status==='Đang làm việc' ? 'Đã khóa' : 'Đang làm việc';
+  saveData(); renderEmployees();
+  toast(e.status==='Đã khóa'? 'Đã khóa tài khoản' : 'Đã mở khóa tài khoản','warn');
+}
+function deleteEmployee(id){
+  if(!confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) return;
+  DB.employees = DB.employees.filter(e=>e.id!==id);
+  saveData(); renderEmployees();
+  toast('Đã xóa nhân viên','warn');
+}
+
+/* ======================= REPORTS ======================= */
+function renderReports(){
+  const all = DB.requests;
+  const totalReq = all.length;
+  const totalDays = all.filter(r=>r.status==='Đã duyệt').reduce((s,r)=>s+r.totalDays,0);
+  const approved = all.filter(r=>r.status==='Đã duyệt').length;
+  const pending = all.filter(r=>r.status==='Chờ trưởng bộ phận duyệt').length;
+  const rejected = all.filter(r=>r.status==='Từ chối').length;
+  document.getElementById('reportStats').innerHTML = [
+    {num:totalReq,lbl:'Tổng số đơn nghỉ phép',cls:''},
+    {num:totalDays,lbl:'Tổng số ngày nghỉ (đã duyệt)',cls:''},
+    {num:approved,lbl:'Số đơn đã duyệt',cls:'green'},
+    {num:pending,lbl:'Số đơn chờ duyệt',cls:'orange'},
+    {num:rejected,lbl:'Số đơn bị từ chối',cls:'red'}
+  ].map(s=>`<div class="stat-card ${s.cls}"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+
+  const byDept = {};
+  DEPARTMENTS.forEach(d=> byDept[d] = {count:0, days:0});
+  all.forEach(r=>{ if(byDept[r.dept]){ byDept[r.dept].count++; if(r.status==='Đã duyệt') byDept[r.dept].days += r.totalDays; }});
+  document.querySelector('#deptReportTable tbody').innerHTML = Object.entries(byDept).map(([d,v])=>`<tr><td>${d}</td><td>${v.count}</td><td>${v.days}</td></tr>`).join('');
+
+  const byType = {};
+  LEAVE_TYPES.forEach(t=> byType[t] = {count:0, days:0});
+  all.forEach(r=>{ if(byType[r.type]){ byType[r.type].count++; if(r.status==='Đã duyệt') byType[r.type].days += r.totalDays; }});
+  document.querySelector('#typeReportTable tbody').innerHTML = Object.entries(byType).map(([t,v])=>`<tr><td>${t}</td><td>${v.count}</td><td>${v.days}</td></tr>`).join('');
+
+  const byEmp = {};
+  all.forEach(r=>{ if(r.status==='Đã duyệt'){ byEmp[r.employeeId] = (byEmp[r.employeeId]||0) + r.totalDays; } });
+  const topList = Object.entries(byEmp).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.querySelector('#topEmpTable tbody').innerHTML = topList.length ? topList.map(([id,days])=>{
+    const e = DB.employees.find(x=>x.id===id);
+    return `<tr><td>${e?e.name:id}</td><td>${e?e.dept:'-'}</td><td>${days}</td></tr>`;
+  }).join('') : `<tr><td colspan="3" class="empty-state">Chưa có dữ liệu</td></tr>`;
+}
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+  let csv = 'Mã đơn,Nhân viên,Phòng ban,Loại nghỉ,Bắt đầu,Kết thúc,Số ngày,Trạng thái\n';
+  DB.requests.forEach(r=>{ csv += `${r.id},${r.employeeName},${r.dept},${r.type},${r.start},${r.end},${r.totalDays},${r.status}\n`; });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bao_cao_nghi_phep_haiv.csv';
+  a.click();
+  toast('Đã xuất file CSV','success');
+});
+document.getElementById('printReportBtn').addEventListener('click', ()=> window.print());
+
+/* ======================= SETTINGS ======================= */
+function renderSettings(){
+  document.getElementById('defaultAnnualDays').value = DB.settings.defaultAnnualDays;
+}
+document.getElementById('saveDefaultDaysBtn').addEventListener('click', ()=>{
+  DB.settings.defaultAnnualDays = parseFloat(document.getElementById('defaultAnnualDays').value)||12;
+  saveData(); toast('Đã lưu thiết lập','success');
+});
+document.getElementById('backupBtn').addEventListener('click', ()=>{
+  const data = JSON.stringify(DB, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'haiv_leave_backup.json';
+  a.click();
+  toast('Sao lưu dữ liệu thành công','success');
+});
+document.getElementById('restoreFileInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!data.employees || !data.requests){ throw new Error('invalid'); }
+      DB = data;
+      saveData();
+      toast('Nhập dữ liệu thành công','success');
+      applyRoleVisibility(); renderSettings(); renderDashboard();
+    }catch(err){ toast('File dữ liệu không hợp lệ','error'); }
+  };
+  reader.readAsText(file);
+});
+document.getElementById('resetSampleBtn').addEventListener('click', ()=>{
+  if(!confirm('Khôi phục dữ liệu mẫu sẽ ghi đè toàn bộ dữ liệu hiện tại. Tiếp tục?')) return;
+  const emps = seedEmployees();
+  DB = {employees: emps, requests: seedRequests(emps), settings:{defaultAnnualDays:12}};
+  saveData();
+  toast('Đã khôi phục dữ liệu mẫu','success');
+  const emp = DB.employees.find(e=>e.id===currentUser.employee.id);
+  currentUser.employee = emp || DB.employees[0];
+  renderDashboard(); renderSettings();
+});
+document.getElementById('clearAllBtn').addEventListener('click', ()=>{
+  if(!confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu? Hành động này không thể hoàn tác.')) return;
+  DB = {employees:[], requests:[], settings:{defaultAnnualDays:12}};
+  saveData();
+  toast('Đã xóa toàn bộ dữ liệu','warn');
+  renderDashboard();
+});
+
+/* ======================= MODALS ======================= */
+document.querySelectorAll('[data-close]').forEach(btn=>{
+  btn.addEventListener('click', ()=> closeModal(btn.dataset.close));
+});
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
+});
+
+/* ======================= INIT ======================= */
+(function init(){
+  if(!tryAutoLogin()){
+    document.getElementById('loginScreen').style.display='flex';
+  }
+})();
+</script>
+</body>
+</html>
